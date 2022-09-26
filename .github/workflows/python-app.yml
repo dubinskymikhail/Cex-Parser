@@ -13,9 +13,28 @@ permissions:
   contents: read
 
 jobs:
+  release:
+    name: Create release
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ join('Release v0.1.0 Last Alpha Commit ',github.sha) }}
+          body: |
+            We have made some features! A new step to being complete.
+          draft: false
+          prerelease: true
   build:
 
     runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.step_upload_url.outputs.upload_url }}
 
     steps:
     - uses: actions/checkout@v3
